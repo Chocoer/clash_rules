@@ -1,3 +1,86 @@
+subscribe:
+  &subscribe {
+    type: http,
+    interval: 3600,
+    health-check:
+      {
+        enable: true,
+        url: https://www.gstatic.com/generate_204,
+        interval: 300,
+      },
+  }
+
+# url 里填写自己的订阅
+proxy-providers:
+  # xxx:
+  #   <<: *subscribe
+  #   path: "./proxy/xxx.yaml"
+  #   url: ""
+
+######### 锚点 begin #########
+strategy-group-1:
+  &strategy-group-1 {
+    type: select,
+    proxies:
+      [
+        🚀 节点选择,
+        ♻️ 自动选择,
+        🇸🇬 狮城节点,
+        🇭🇰 香港节点,
+        🇨🇳 台湾节点,
+        🇯🇵 日本节点,
+        🇺🇲 美国节点,
+        🇰🇷 韩国节点,
+        🚀 手动切换,
+        🎯 全球直连,
+      ],
+  }
+strategy-group-2:
+  &strategy-group-2 {
+    type: select,
+    proxies:
+      [
+        🎯 全球直连,
+        🚀 节点选择,
+        🇺🇲 美国节点,
+        🇭🇰 香港节点,
+        🇨🇳 台湾节点,
+        🇸🇬 狮城节点,
+        🇯🇵 日本节点,
+        🇰🇷 韩国节点,
+        🚀 手动切换,
+      ],
+  }
+url-test-1:
+  &url-test-1 {
+    include-all: true,
+    type: url-test,
+    interval: 300,
+    tolerance: 50,
+  }
+rule-provider-classical:
+  &rule-provider-classical {
+    type: http,
+    behavior: classical,
+    interval: 86400,
+    format: text,
+  }
+rule-provider-domain:
+  &rule-provider-domain {
+    type: http,
+    behavior: domain,
+    interval: 86400,
+    format: text,
+  }
+rule-provider-ipcidr:
+  &rule-provider-ipcidr {
+    type: http,
+    behavior: ipcidr,
+    interval: 86400,
+    format: text,
+  }
+#########  锚点 end  #########
+
 proxy-groups:
   - name: 🚀 节点选择
     type: select
@@ -20,70 +103,15 @@ proxy-groups:
     interval: 300
     tolerance: 50
   - name: 📲 电报消息
-    type: select
-    proxies:
-      - 🚀 节点选择
-      - ♻️ 自动选择
-      - 🇸🇬 狮城节点
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇯🇵 日本节点
-      - 🇺🇲 美国节点
-      - 🇰🇷 韩国节点
-      - 🚀 手动切换
-      - 🎯 全球直连
+    <<: *strategy-group-1
   - name: 🤖 人工智能
-    type: select
-    proxies:
-      - 🚀 节点选择
-      - ♻️ 自动选择
-      - 🇸🇬 狮城节点
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇯🇵 日本节点
-      - 🇺🇲 美国节点
-      - 🇰🇷 韩国节点
-      - 🚀 手动切换
-      - 🎯 全球直连
+    <<: *strategy-group-1
   - name: 🐱 Github
-    type: select
-    proxies:
-      - 🚀 节点选择
-      - ♻️ 自动选择
-      - 🇸🇬 狮城节点
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇯🇵 日本节点
-      - 🇺🇲 美国节点
-      - 🇰🇷 韩国节点
-      - 🚀 手动切换
-      - 🎯 全球直连
+    <<: *strategy-group-1
   - name: 📹 油管视频
-    type: select
-    proxies:
-      - 🚀 节点选择
-      - ♻️ 自动选择
-      - 🇸🇬 狮城节点
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇯🇵 日本节点
-      - 🇺🇲 美国节点
-      - 🇰🇷 韩国节点
-      - 🚀 手动切换
-      - 🎯 全球直连
+    <<: *strategy-group-1
   - name: 🎥 奈飞视频
-    type: select
-    proxies:
-      - 🚀 节点选择
-      - ♻️ 自动选择
-      - 🇸🇬 狮城节点
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇯🇵 日本节点
-      - 🇺🇲 美国节点
-      - 🇰🇷 韩国节点
-      - 🚀 手动切换
-      - 🎯 全球直连
+    <<: *strategy-group-1
   - name: 📺 巴哈姆特
     type: select
     proxies:
@@ -120,85 +148,17 @@ proxy-groups:
       - 🇯🇵 日本节点
       - 🚀 手动切换
   - name: 📢 谷歌FCM
-    type: select
-    proxies:
-      - 🎯 全球直连
-      - 🚀 节点选择
-      - 🇺🇲 美国节点
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇸🇬 狮城节点
-      - 🇯🇵 日本节点
-      - 🇰🇷 韩国节点
-      - 🚀 手动切换
+    <<: *strategy-group-2
   - name: Ⓜ️ 微软Bing
-    type: select
-    proxies:
-      - 🎯 全球直连
-      - 🚀 节点选择
-      - 🇺🇲 美国节点
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇸🇬 狮城节点
-      - 🇯🇵 日本节点
-      - 🇰🇷 韩国节点
-      - 🚀 手动切换
+    <<: *strategy-group-2
   - name: Ⓜ️ 微软云盘
-    type: select
-    proxies:
-      - 🎯 全球直连
-      - 🚀 节点选择
-      - 🇺🇲 美国节点
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇸🇬 狮城节点
-      - 🇯🇵 日本节点
-      - 🇰🇷 韩国节点
-      - 🚀 手动切换
+    <<: *strategy-group-2
   - name: Ⓜ️ 微软服务
-    type: select
-    proxies:
-      - 🚀 节点选择
-      - 🎯 全球直连
-      - 🇺🇲 美国节点
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇸🇬 狮城节点
-      - 🇯🇵 日本节点
-      - 🇰🇷 韩国节点
-      - 🚀 手动切换
+    <<: *strategy-group-1
   - name: 🍎 苹果服务
-    type: select
-    proxies:
-      - 🎯 全球直连
-      - 🚀 节点选择
-      - 🇺🇲 美国节点
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇸🇬 狮城节点
-      - 🇯🇵 日本节点
-      - 🇰🇷 韩国节点
-      - 🚀 手动切换
+    <<: *strategy-group-2
   - name: 🎮 游戏平台
-    type: select
-    proxies:
-      - 🎯 全球直连
-      - 🚀 节点选择
-      - 🇺🇲 美国节点
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇸🇬 狮城节点
-      - 🇯🇵 日本节点
-      - 🇰🇷 韩国节点
-      - 🚀 手动切换
-  - name: 🎶 网易音乐
-    type: select
-    include-all: true
-    filter: (?i)网易|音乐|NetEase|Music
-    proxies:
-      - 🎯 全球直连
-      - 🚀 节点选择
-      - ♻️ 自动选择
+    <<: *strategy-group-2
   - name: 🎯 全球直连
     type: select
     proxies:
@@ -216,294 +176,171 @@ proxy-groups:
       - REJECT
       - DIRECT
   - name: 🐟 漏网之鱼
-    type: select
-    proxies:
-      - 🚀 节点选择
-      - ♻️ 自动选择
-      - 🎯 全球直连
-      - 🇭🇰 香港节点
-      - 🇨🇳 台湾节点
-      - 🇸🇬 狮城节点
-      - 🇯🇵 日本节点
-      - 🇺🇲 美国节点
-      - 🇰🇷 韩国节点
-      - 🚀 手动切换
+    <<: *strategy-group-1
   - name: 🇭🇰 香港节点
-    include-all: true
+    <<: *url-test-1
     filter: (?i)港|HK|hk|Hong Kong|HongKong|hongkong
-    type: url-test
-    interval: 300
-    tolerance: 50
   - name: 🇯🇵 日本节点
-    include-all: true
+    <<: *url-test-1
     filter: (?i)日本|川日|东京|大阪|泉日|埼玉|沪日|深日|JP|Japan
-    type: url-test
-    interval: 300
-    tolerance: 50
   - name: 🇺🇲 美国节点
-    include-all: true
+    <<: *url-test-1
     filter: (?i)美|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|US|United States
-    type: url-test
-    interval: 300
-    tolerance: 50
   - name: 🇨🇳 台湾节点
-    include-all: true
+    <<: *url-test-1
     filter: (?i)台|新北|彰化|TW|Taiwan
-    type: url-test
-    interval: 300
-    tolerance: 50
   - name: 🇸🇬 狮城节点
-    include-all: true
+    <<: *url-test-1
     filter: (?i)新加坡|坡|狮城|SG|Singapore
-    type: url-test
-    interval: 300
-    tolerance: 50
   - name: 🇰🇷 韩国节点
-    include-all: true
+    <<: *url-test-1
     filter: (?i)KR|Korea|KOR|首尔|韩|韓
-    type: url-test
-    interval: 300
-    tolerance: 50
 
 rule-providers:
   LocalAreaNetwork:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/LocalAreaNetwork.list
     path: ./ruleset/LocalAreaNetwork.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   UnBan:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/UnBan.list
     path: ./ruleset/UnBan.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   BanAD:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/BanAD.list
     path: ./ruleset/BanAD.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   BanProgramAD:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/BanProgramAD.list
     path: ./ruleset/BanProgramAD.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   GoogleFCM:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/GoogleFCM.list
     path: ./ruleset/GoogleFCM.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   GoogleCN:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/GoogleCN.list
     path: ./ruleset/GoogleCN.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   SteamCN:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/SteamCN.list
     path: ./ruleset/SteamCN.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   Bing:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Bing.list
     path: ./ruleset/Bing.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   OneDrive:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/OneDrive.list
     path: ./ruleset/OneDrive.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   Microsoft:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Microsoft.list
     path: ./ruleset/Microsoft.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   Apple:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Apple.list
     path: ./ruleset/Apple.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   Telegram:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Telegram.list
     path: ./ruleset/Telegram.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   OpenAI_No_Resolve:
+    <<: *rule-provider-classical
     url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI_No_Resolve.yaml
     path: ./ruleset/OpenAI_No_Resolve.yaml
-    behavior: classical
-    interval: 86400
     format: yaml
-    type: http
   Copilot_No_Resolve:
+    <<: *rule-provider-classical
     url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Copilot/Copilot_No_Resolve.yaml"
     path: ./ruleset/Copilot_No_Resolve.yaml
-    behavior: classical
-    interval: 86400
     format: yaml
-    type: http
   Claude_No_Resolve:
+    <<: *rule-provider-classical
     url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Claude/Claude_No_Resolve.yaml"
     path: ./ruleset/Claude_No_Resolve.yaml
-    behavior: classical
-    interval: 86400
     format: yaml
-    type: http
   Gemini_No_Resolve:
+    <<: *rule-provider-classical
     url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Gemini/Gemini_No_Resolve.yaml"
     path: ./ruleset/Gemini_No_Resolve.yaml
-    behavior: classical
-    interval: 86400
     format: yaml
-    type: http
   Github:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/Github.list
     path: ./ruleset/Github.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   NetEaseMusic:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/NetEaseMusic.list
     path: ./ruleset/NetEaseMusic.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   Epic:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/Epic.list
     path: ./ruleset/Epic.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   Origin:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/Origin.list
     path: ./ruleset/Origin.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   Sony:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/Sony.list
     path: ./ruleset/Sony.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   Steam:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/Steam.list
     path: ./ruleset/Steam.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   Nintendo:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/Nintendo.list
     path: ./ruleset/Nintendo.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   YouTube:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/YouTube.list
     path: ./ruleset/YouTube.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   Netflix:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/Netflix.list
     path: ./ruleset/Netflix.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   Bahamut:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/Bahamut.list
     path: ./ruleset/Bahamut.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   BilibiliHMT:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/BilibiliHMT.list
     path: ./ruleset/BilibiliHMT.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   Bilibili:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/Bilibili.list
     path: ./ruleset/Bilibili.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
+  Category-games:
+    <<: *rule-provider-domain
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games.yaml"
+    format: yaml
   ChinaMedia:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ChinaMedia.list
     path: ./ruleset/ChinaMedia.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   ProxyMedia:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ProxyMedia.list
     path: ./ruleset/ProxyMedia.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   ProxyGFWlist:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ProxyGFWlist.list
     path: ./ruleset/ProxyGFWlist.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
   ChinaDomain:
+    <<: *rule-provider-domain
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ChinaDomain.list
     path: ./ruleset/ChinaDomain.list
-    behavior: domain
-    interval: 86400
-    format: text
-    type: http
   ChinaCompanyIp:
+    <<: *rule-provider-ipcidr
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ChinaCompanyIp.list
     path: ./ruleset/ChinaCompanyIp.list
-    behavior: ipcidr
-    interval: 86400
-    format: text
-    type: http
   Download:
+    <<: *rule-provider-classical
     url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Download.list
     path: ./ruleset/Download.list
-    behavior: classical
-    interval: 86400
-    format: text
-    type: http
 
 rules:
   - "RULE-SET,LocalAreaNetwork,🎯 全球直连"
@@ -523,12 +360,12 @@ rules:
   - "RULE-SET,Claude_No_Resolve,🤖 人工智能"
   - "RULE-SET,Gemini_No_Resolve,🤖 人工智能"
   - "RULE-SET,Github,🐱 Github"
-  - "RULE-SET,NetEaseMusic,🎶 网易音乐"
   - "RULE-SET,Epic,🎮 游戏平台"
   - "RULE-SET,Origin,🎮 游戏平台"
   - "RULE-SET,Sony,🎮 游戏平台"
   - "RULE-SET,Steam,🎮 游戏平台"
   - "RULE-SET,Nintendo,🎮 游戏平台"
+  - "RULE-SET,Category-games,🎮 游戏平台"
   - "RULE-SET,YouTube,📹 油管视频"
   - "RULE-SET,Netflix,🎥 奈飞视频"
   - "RULE-SET,Bahamut,📺 巴哈姆特"
@@ -545,3 +382,48 @@ rules:
   - "GEOIP,cn,🎯 全球直连,no-resolve"
   - "IN-TYPE,INNER,DIRECT"
   - "MATCH,🐟 漏网之鱼"
+
+mixed-port: 7890
+allow-lan: true
+bind-address: "*"
+mode: rule
+log-level: info
+external-controller: "127.0.0.1:9090"
+dns:
+  enable: true
+  ipv6: false
+  default-nameserver: [223.5.5.5, 223.6.6.6]
+  proxy-server-nameserver:
+    [
+      "https://doh.pub/dns-query",
+      "https://dns.alidns.com/dns-query",
+      "https://223.5.5.5/dns-query",
+      "https://223.6.6.6/dns-query",
+      "tls://dns.alidns.com",
+      "tls://223.5.5.5:853",
+      "tls://223.6.6.6:853",
+    ]
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter: ["*.lan", localhost.ptlogin2.qq.com]
+  use-hosts: true
+  nameserver:
+    [
+      "https://doh.pub/dns-query",
+      "https://dns.alidns.com/dns-query",
+      "https://223.5.5.5/dns-query",
+      "https://223.6.6.6/dns-query",
+      "tls://dns.alidns.com",
+      "tls://223.5.5.5:853",
+      "tls://223.6.6.6:853",
+    ]
+  fallback:
+    [
+      "https://doh.pub/dns-query",
+      "https://dns.alidns.com/dns-query",
+      "https://223.5.5.5/dns-query",
+      "https://223.6.6.6/dns-query",
+      "tls://dns.alidns.com",
+      "tls://223.5.5.5:853",
+      "tls://223.6.6.6:853",
+    ]
+  fallback-filter: { geoip: true, ipcidr: [240.0.0.0/4, 0.0.0.0/32] }
